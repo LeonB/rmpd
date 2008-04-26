@@ -1,11 +1,11 @@
 cmd_player
-    by FIXME (your name)
-    FIXME (url)
+    by Leon Bogaert
+    http://www.vanutsteen.nl
     http://lorenzod8n.wordpress.com/2008/04/05/an-mpd-clone-in-ruby/
 
 == DESCRIPTION:
 
-FIXME (describe your package)
+A Ruby MPD clone. 
 
 == FEATURES/PROBLEMS:
 
@@ -17,11 +17,12 @@ FIXME (describe your package)
 
 == REQUIREMENTS:
 
-* FIXME (list of requirements)
+* ruby-gstreamer by Sjoerd Simons OR the jruby_gst gem
+* Gstreamer >= 0.10
 
 == INSTALL:
 
-* FIXME (sudo gem install, anything else)
+* sudo gem install rmpd
 
 == TODO:
 

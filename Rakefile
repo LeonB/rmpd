@@ -5,15 +5,15 @@
 load 'tasks/setup.rb'
 
 ensure_in_path 'lib'
-require 'cmd_player'
+require 'rmpd'
 
 task :default => 'spec:run'
 
-PROJ.name = 'cmd_player'
-PROJ.authors = 'FIXME (who is writing this software)'
-PROJ.email = 'FIXME (your e-mail)'
-PROJ.url = 'FIXME (project homepage)'
-PROJ.rubyforge_name = 'cmd_player'
+PROJ.name = 'rmpd'
+PROJ.authors = 'Leon Bogaert'
+PROJ.email = 'leon@tim-online.nl'
+PROJ.url = 'www.vanutsteen.nl'
+PROJ.rubyforge_name = 'rmpd'
 
 PROJ.spec_opts << '--color'
 
