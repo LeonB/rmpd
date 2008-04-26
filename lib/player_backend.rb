@@ -1,22 +1,12 @@
 class PlayerBackend
   
-  def initialize #self.new?s
-    raise TypeError, "I am an abstract class"
-   end 
-  
-  #Return a file list of all backends
-  def self.backends
-  end
-  
-  def factory(type = nil)
-    if type == nil
-      file = self.backends[0]
+  def initialize
+    if defined? JRUBY_VERSION
+      require "#{PATH/lib/player_backends/jruby_gst.rb}"
+      return PlayerBackends::JrubyGst.new
     else
-      file = "#{type}.rb"
+      require "#{PATH/lib/player_backends/gstreamer.rb}"
+      return PlayerBackends::Gstreamer.new
     end
-    
-    classname = camelize(file)
-    require "#{PATH}/lib/player_backends/#{file}"
-    return constantize(classname).new
   end
 end

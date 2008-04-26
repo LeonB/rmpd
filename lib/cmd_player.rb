@@ -5,7 +5,10 @@ module CmdPlayer
   load "#{PATH}/lib/kernel.rb"
   load "#{PATH}/lib/monkeys.rb"
   load "#{PATH}/lib/prompt.rb"
+  load "#{PATH}/lib/player_backend.rb"
   load "#{PATH}/lib/player.rb"
+  
+  #Dit moet eigenlijk in de bin komen
   @player = Player.new
   
   Player.instance_methods(false).each do |method|
