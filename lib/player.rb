@@ -1,13 +1,10 @@
 #TODO implement tagging
 
 class Player
-  attr_accessor :current_track, :history, :playlist, :playbin, :current_track
+  attr_accessor :current_track, :history, :playlist, :current_track
   ACCEPTED_EXTENSIONS = ['.mp3', '.ogg', '.wav', 'm3u']
   
-  def initialize(name = 'cmd_player')
-    Gst.init(name)
-    self.playbin = Gst::Playbin.new(name)
-    setup_callbacks
+  def initialize()
   end
   
   def status
@@ -96,21 +93,22 @@ class Player
     raise 'Implement previous_track?!'
   end
   
-  def playing?
-    self.playbin.playing?
-  end
-  
   def state
     self.playbin.state.to_s
   end
   
-  def stopped?
-    self.playbin.stopped?
-  end
-  
-  def paused
-    self.playbin.paused?
-  end
+    #Deze maken adhv .state
+    def playing?
+      self.playbin.playing?
+    end
+
+    def stopped?
+      self.playbin.stopped?
+    end
+
+    def paused
+      self.playbin.paused?
+    end
   
   #private
   
@@ -122,17 +120,14 @@ class Player
     @playbin
   end
   
-  def setup_callbacks
-    self.playbin.bus.connect(Gst::MessageType::EOS) do |message|
-      
-      history << playlist.shift
-      self.current_track = nil
-      
-      if not self.playlist.empty?
-        keep_playing
-      else
-        stop
-      end
+  def callback_eos
+    history << playlist.shift
+    self.current_track = nil
+    
+    if not self.playlist.empty?
+      keep_playing
+    else
+      stop
     end
   end
   
