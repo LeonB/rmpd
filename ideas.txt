@@ -1,0 +1,54 @@
+Gstreamer:
+- new-decoded-pad
+- Decodebin
+- www.unmuted.de/?p=14
+
+State machine:
+- http://statemachine.rubyforge.org
+
+Parser:
+- http://www.hwaci.com/sw/lemon/
+
+Server (telnet):
+- Gserver: http://ruby-doc.org/stdlib/libdoc/gserver/rdoc/classes/GServer.html
+- http://www.rubyinside.com/advent2006/10-gserver.html
+
+Daemons:
+- http://daemons.rubyforge.org/
+
+XMMP:
+- xmpp4r: http://home.gna.org/xmpp4r/ ((Sort of) Developer Documentation)
+
+Other options for remote controlling:
+- http://www.igvita.com/2007/05/15/distributed-ruby-workers-on-ec2/
+
+Eventmachine? : http://rubyeventmachine.com/
+
+Algemene richtlijnen:
+- http://gnufied.org/category/ruby/
+
+Inotify:
+- http://www.bouh.org/inotify/INotify-0.3.0.rb (voorbeeld: http://blog.tryphon.org/alban/media/2007-10-26-autotest-inotify.rb)
+- http://raa.ruby-lang.org/project/ruby-inotify/
+- http://rubyforge.org/projects/rinotify/
+- Rev (based on libev); http://rubyforge.org/projects/rev i.p.v. eventmachine?
+
+Ongeveer hetzelfde:
+- http://djur.desperance.net/ruby/roombox.READMEs
+
+
+Features:
+songs
+songs not in library
+Internet streams
+Album covers
+Queue (after playing, remote it. After done -> ?)
+Drie delen:
+    *  music player for different formats with gapless playback & crossfade with simple song queue
+    * media database
+    * playlist 
+Audiscrobbler/last.fm
+inotify/dnotify?
+XMPP as communication protocol
+commandlist queue
+callbacks by default!

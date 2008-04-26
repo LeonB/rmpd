@@ -1,10 +1,11 @@
 #TODO implement tagging
 
 class Player
-  attr_accessor :current_track, :history, :playlist, :current_track
+  attr_accessor :current_track, :history, :playlist, :current_track, :backend
   ACCEPTED_EXTENSIONS = ['.mp3', '.ogg', '.wav', 'm3u']
   
-  def initialize()
+  def initialize
+    self.backend = PlayerBackend.new
   end
   
   def status
@@ -30,14 +31,14 @@ class Player
   end
   
   def pause
-    self.playbin.pause
+    self.backend.pause
   end
   
   def stop
     #Remove the first track, if it's the current track (I wouldn't know when that's not. Just silly security)
     playlist.shift if playlist.first == self.current_track
     self.current_track = nil
-    self.playbin.stop
+    self.backend.stop
   end
   
   def add(input)
@@ -51,14 +52,6 @@ class Player
       else
         raise 'Not an existing file or directory!'
       end
-    end
-  end
-  
-  def volume(level = nil)
-    if level.nil?
-      self.playbin.volume
-    else
-      self.playbin.volume = level
     end
   end
   
@@ -109,16 +102,6 @@ class Player
     def paused
       self.playbin.paused?
     end
-  
-  #private
-  
-  def playbin=(playbin)
-    @playbin = playbin
-  end
-  
-  def playbin
-    @playbin
-  end
   
   def callback_eos
     history << playlist.shift
@@ -171,7 +154,7 @@ class Player
   
   def play_current_track
     #Play the current track
-    self.playbin.play(self.current_track.path)
+    self.backend.play(self.current_track.path)
   end
   
 end

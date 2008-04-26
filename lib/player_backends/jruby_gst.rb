@@ -12,15 +12,15 @@ class PlayerBackends::JrubyGst
   end
   
   def play(file)
-    
+    self.playbin.play(file)
   end
   
   def stop
-    
+    self.playbin.stop
   end
   
   def pause
-    
+    self.playbin.pause
   end
   
   #??
@@ -32,8 +32,12 @@ class PlayerBackends::JrubyGst
     
   end
   
-  def volume=(volume)
-    
+  def volume(level = nil)
+    if level.nil?
+      self.playbin.volume
+    else
+      self.playbin.volume = level
+    end
   end
   
   private
@@ -41,5 +45,13 @@ class PlayerBackends::JrubyGst
     self.playbin.bus.connect(Gst::MessageType::EOS) do |message|
       self.player.callback_eos()
     end
+  end
+  
+  def playbin=(playbin)
+    @playbin = playbin
+  end
+  
+  def playbin
+    @playbin
   end
 end
