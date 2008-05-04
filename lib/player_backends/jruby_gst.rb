@@ -1,18 +1,19 @@
-require 'jruby_gst'
+#require 'jruby_gst'
+require '/home/leon/Workspaces/jruby_gst/lib/jruby_gst.rb'
 
-class PlayerBackends::JrubyGst
-  attr_accessor :playbin, :player
+module PlayerBackend::JrubyGst
   
-  def initalize(player)
-    self.player = player
+  def self.extended(base)
+    attr_accessor :playbin
     
     Gst.init('cmd_player')
-    self.playbin = Gst::Playbin.new('cmd_player')
-    setup_callbacks
+    base.playbin = Gst::Playbin.new('cmd_player')
   end
   
-  def play(file)
-    self.playbin.play(file)
+  def play(uri)
+    playbin.state = Gst::State::NULL #Else it WILL fail
+    self.playbin.uri = uri
+    self.playbin.play
   end
   
   def stop
@@ -23,9 +24,8 @@ class PlayerBackends::JrubyGst
     self.playbin.pause
   end
   
-  #??
   def state
-    
+    self.playbin.state
   end
   
   def volume
@@ -40,13 +40,12 @@ class PlayerBackends::JrubyGst
     end
   end
   
-  private
   def setup_callbacks
     self.playbin.bus.connect(Gst::MessageType::EOS) do |message|
       self.player.callback_eos()
     end
   end
-  
+ 
   def playbin=(playbin)
     @playbin = playbin
   end

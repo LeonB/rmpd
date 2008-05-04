@@ -3,13 +3,13 @@
     <type>org.netbeans.modules.ruby.rubyproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/ruby-project/1">
-            <name>Commandline player</name>
+            <name>rmpd</name>
             <source-roots>
+                <root id="src.lib.dir"/>
                 <root id="src.bin.dir"/>
-                <root id="src.dir"/>
             </source-roots>
             <test-roots>
-                <root id="test.src.dir"/>
+                <root id="test.test.dir"/>
                 <root id="test.spec.dir"/>
             </test-roots>
         </data>

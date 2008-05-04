@@ -1,0 +1,5 @@
+class State
+  STOPPED = 'STOPPED'
+  PAUSED = 'PAUSED'
+  PLAYING = 'PLAYING'
+end

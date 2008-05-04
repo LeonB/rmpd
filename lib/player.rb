@@ -5,12 +5,13 @@ class Player
   ACCEPTED_EXTENSIONS = ['.mp3', '.ogg', '.wav', 'm3u']
   
   def initialize
-    self.backend = PlayerBackend.new
+    self.backend = PlayerBackend.new(self)
+    backend_functions :state, :playing?, :paused?, :stopped?, :pause, :stop, :volume, :volume=
   end
   
   def status
-    case state.to_s
-    when 'NULL' || 'READY'
+    case self.state.to_s
+    when 'STOPPED'
       'waiting...'
     when 'PLAYING'
       "playing #{self.current_track.path}"
@@ -22,12 +23,13 @@ class Player
   def play
     #if still playing, return nothing
     return nil if playing?
+    return self.backend.resume if paused?
     return nil if self.playlist.empty? && !self.current_track
     
     #Make sure current_track is set, if it's empty and playlist is not empty
     self.next_track_as_current unless self.playlist.empty? || self.current_track
     
-    self.play_current_track #Current track is set
+    self.backend.play("file://#{self.current_track.path}") #Current track is set
   end
   
   def pause
@@ -57,9 +59,13 @@ class Player
   
   def next
     self.remove_current_track
-    self.next_track_as_current
     
-    self.play_current_track
+    if playlist.length > 0
+      self.next_track_as_current
+      self.play_current_track
+    else
+      self.stop
+    end
   end
   
   def previous
@@ -86,22 +92,7 @@ class Player
     raise 'Implement previous_track?!'
   end
   
-  def state
-    self.playbin.state.to_s
-  end
-  
-    #Deze maken adhv .state
-    def playing?
-      self.playbin.playing?
-    end
-
-    def stopped?
-      self.playbin.stopped?
-    end
-
-    def paused
-      self.playbin.paused?
-    end
+  protected
   
   def callback_eos
     history << playlist.shift
@@ -119,7 +110,6 @@ class Player
   end
   
   def remove_current_track
-    playbin.state = Gst::State::NULL #Else it WILL fail
     self.current_track = nil
     self.playlist.shift
   end
@@ -152,9 +142,14 @@ class Player
     
   end
   
-  def play_current_track
-    #Play the current track
-    self.backend.play(self.current_track.path)
+  def backend_functions(*methods)
+    methods.each do |method|
+      
+      meta_eval do
+        define_method method do |*args|
+          self.backend.send(method, *args)
+        end
+      end
+    end
   end
-  
 end

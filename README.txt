@@ -34,6 +34,7 @@ A Ruby MPD clone.
   * Player
   * Daemon
   * XML-RPC
+  * Input souces?
   * ...
 
 == LICENSE:
