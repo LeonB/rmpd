@@ -36,6 +36,7 @@ A Ruby MPD clone.
   * XML-RPC
   * Input souces?
   * ...
+* Make a directory "interfaces" for xml/rpc, drb etc.
 
 == LICENSE:
 

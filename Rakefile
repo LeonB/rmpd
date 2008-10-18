@@ -15,6 +15,9 @@ PROJ.email = 'leon@tim-online.nl'
 PROJ.url = 'www.vanutsteen.nl'
 PROJ.rubyforge_name = 'rmpd'
 
-PROJ.spec_opts << '--color'
+#PROJ.rdoc.opts << '--diagram'
+PROJ.rdoc.exclude << 'bin'
+
+PROJ.spec.opts << '--color'
 
 # EOF

@@ -42,7 +42,7 @@ module PlayerBackend::JrubyGst
   
   def setup_callbacks
     self.playbin.bus.connect(Gst::MessageType::EOS) do |message|
-      self.player.callback_eos()
+      self.player.after_end_of_track()
     end
   end
  

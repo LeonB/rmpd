@@ -1,26 +1,34 @@
 #TODO implement tagging
+#I want this class to be the frontend, all public function should be here...
 
 class Player
   attr_accessor :current_track, :history, :playlist, :current_track, :backend
   ACCEPTED_EXTENSIONS = ['.mp3', '.ogg', '.wav', 'm3u']
   
   def initialize
+    self.boot
+  end
+  
+  def boot
     self.backend = PlayerBackend.new(self)
-    backend_functions :state, :playing?, :paused?, :stopped?, :pause, :stop, :volume, :volume=
+    backend_functions :state, :playing?, :paused?, :stopped?, :pause, :stop, 
+      :volume, :volume=
   end
   
   def status
     case self.state.to_s
-    when 'STOPPED'
+    when 'READY'
       'waiting...'
     when 'PLAYING'
       "playing #{self.current_track.path}"
     when 'PAUSED'
       'paused'
+    else 
+      raise "Unknow status: #{self.state}"
     end
   end
   
-  def play
+  def play    
     #if still playing, return nothing
     return nil if playing?
     return self.backend.resume if paused?
@@ -37,13 +45,15 @@ class Player
   end
   
   def stop
-    #Remove the first track, if it's the current track (I wouldn't know when that's not. Just silly security)
+    #Remove the first track, if it's the current track 
+    #(I wouldn't know when that's not. Just silly security)
     playlist.shift if playlist.first == self.current_track
     self.current_track = nil
     self.backend.stop
   end
   
   def add(input)
+    #TODO: what if it's not a file or directory?
     
     #I'm using Dir[] because it handles regex'es automatically
     Dir[input].each do |input|
@@ -59,17 +69,16 @@ class Player
   
   def next
     self.remove_current_track
-    
-    if playlist.length > 0
+    if not playlist.empty?
       self.next_track_as_current
-      self.play_current_track
+      self.play
     else
       self.stop
     end
   end
   
   def previous
-    
+    #TODO: implement previous/history
   end
   
   def playlist
@@ -92,9 +101,7 @@ class Player
     raise 'Implement previous_track?!'
   end
   
-  protected
-  
-  def callback_eos
+  def end_of_track_reached
     history << playlist.shift
     self.current_track = nil
     
@@ -104,20 +111,24 @@ class Player
       stop
     end
   end
+
+  protected
+  def next_track_as_current
+    self.current_track = self.next_track?
+  end
   
   def keep_playing
     self.next()
   end
   
   def remove_current_track
-    self.current_track = nil
-    self.playlist.shift
+    unless current_track.nil?
+      self.current_track = nil
+      self.playlist.shift
+    end
   end
   
-  def next_track_as_current
-    self.current_track = self.next_track?
-  end
-  
+  private
   def add_file(file)
     file = File.new(file)
     
@@ -152,4 +163,7 @@ class Player
       end
     end
   end
-end
+  
+  #include Callbacks
+  #add_callback_methods :boot, :play
+end #player

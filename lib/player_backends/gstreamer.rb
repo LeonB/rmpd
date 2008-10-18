@@ -1,19 +1,31 @@
 #All you have to do (Ubuntu 8.04) is: sudo gem install libgstreamer0.10-ruby
 
 require 'gst0.10'
+#https://trac.luon.net/ruby-gstreamer0.10/
 
 module PlayerBackend::Gstreamer
   
-  def self.extended(base)
+  def self.extended(player)
     attr_accessor :playbin
     
     Gst.init
     # setup the playbin
-    base.playbin = Gst::ElementFactory.make('playbin')
+    player.playbin = Gst::ElementFactory.make('playbin')
   end
   
   def setup_callbacks
-    
+    #self.player.after_end_of_track()
+    playbin.bus.add_watch do | message |
+      case message.get_type
+      when Gst::Message::MessageType::ERROR then
+        print "An error occured: #{message.parse_error[0]}\n"
+        #mainloop.quit
+      when Gst::Message::MessageType::EOS then
+        self.player.after_end_of_track()
+      else
+        #nothing...
+      end
+    end
   end
   
   def play(uri)    
@@ -36,15 +48,14 @@ module PlayerBackend::Gstreamer
   
   def state
     case self.playbin.get_state.last.nick
-    when 'null', 'ready'
+    when 'null', 'ready', 'void-pending'
       State::STOPPED
     when 'playing'
       State::PLAYING
     when 'paused'
       State::PAUSED
     else
-      print "#{self.playbin.get_state.last.nick}\n"
-      exit
+      raise "#{self.playbin.get_state.last.nick}\n"
     end
   end
   
