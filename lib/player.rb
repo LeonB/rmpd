@@ -105,7 +105,6 @@ class Player
   end
   
   def end_of_track_reached
-    p 'eof reached'
     history << playlist.shift
     self.current_track = nil
     
