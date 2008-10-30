@@ -1,15 +1,9 @@
 #backend: jruby_gst
 plugins: - drb
-#         - daemon
+         - daemon
          - lastfm
          - watchdirs
          - xmlrpc
-
-#Daemon options
-#daemonize: true
-
-#Watchdir options
-
-#lastfm options
-username: lbogaert
-password: md5('Pbq11Kz')
+drb:
+  host: localhost
+  port: 3345

@@ -54,7 +54,7 @@ module PlayerBackend::Gst
     when 'playing'
       @state = State::PLAYING
     when 'paused'
-      @state = State::PAUSE
+      @state = State::PAUSED
     end
   end
   
@@ -63,12 +63,11 @@ module PlayerBackend::Gst
     #self.player.after_end_of_track()
     playbin.bus.add_watch do |bus, message|
       case message.type
-      when Gst::Message::EOS  
-        self.stop
+      when Gst::Message::EOS
         self.player.end_of_track_reached()
       when Gst::Message::ERROR
         p message.parse
-        self.stop
+        self.player.end_of_track_reached()
       when Gst::Message::STATE_CHANGED
         self.state = playbin.get_state
       else

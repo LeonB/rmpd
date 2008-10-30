@@ -1,19 +1,21 @@
 #Daemonize the player (with some specific commandline option?)
-
-class Player
-  def status_message
-    print "#{self.status}\n"
-  end
-  
-  #method_chain?
-  def play_with_daemonize
-    loop do
-      play_without_daemonize
-      sleep 1
+module Rmpd
+  class Daemon
+    require 'daemons'
+    cattr_accessor :daemon
+    
+    def status_message
+      print "#{self.status}\n"
     end
-  end
   
-  #before_play 'Thread.new do'
-  #after_play 'end'
-  after_boot :status_message
+    #method_chain?
+    def self.boot_with_daemonize
+      self.daemon = Daemons.call do
+        Rmpd.server.start
+      end
+    end
+  
+    #after_boot :status_message
+    
+  end
 end

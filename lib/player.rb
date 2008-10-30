@@ -1,4 +1,6 @@
 #TODO implement tagging
+#TODO: make playlist seperate class
+#TODO: the protocol stuff (file:// etc) should be the responsibility of the 
 #I want this class to be the frontend, all public function should be here...
 
 class Player
@@ -11,7 +13,7 @@ class Player
   
   def boot
     self.backend = PlayerBackend.new(self)
-    backend_functions :state, :playing?, :paused?, :stopped?, :pause, :stop, 
+    backend_functions :state, :playing?, :paused?, :stopped?, :pause, 
       :volume, :volume=
   end
   
@@ -35,13 +37,10 @@ class Player
     return nil if self.playlist.empty? && !self.current_track
     
     #Make sure current_track is set, if it's empty and playlist is not empty
-    self.next_track_as_current unless self.playlist.empty? || self.current_track
-    
+    self.next_track_as_current unless self.playlist.empty? or self.current_track
+
+    p self.current_track
     self.backend.play("file://#{self.current_track.path}") #Current track is set
-  end
-  
-  def pause
-    self.backend.pause
   end
   
   def stop
@@ -65,11 +64,15 @@ class Player
         raise 'Not an existing file or directory!'
       end
     end
+    
+    #raise "Don't know what this is!"
   end
   
   def next
     self.remove_current_track
     if not playlist.empty?
+      self.stop #if it isn't stopped, it is still playing and if you then press
+        #play: play, play = do nothing
       self.next_track_as_current
       self.play
     else
@@ -102,6 +105,7 @@ class Player
   end
   
   def end_of_track_reached
+    p 'eof reached'
     history << playlist.shift
     self.current_track = nil
     
@@ -137,7 +141,7 @@ class Player
     elsif ACCEPTED_EXTENSIONS.include? file.extension
       playlist << file
     else
-      #raise "Not a valid extension #{file.extension}"
+      raise "Not a valid extension #{file.extension}"
       #TODO: vervangen door een loging iets
     end
   end

@@ -9,6 +9,7 @@ unless defined? Rmpd
     VERSION = '0.0.1'
     LIBPATH = ::File.expand_path(::File.dirname(__FILE__))
     PATH = ::File.dirname(LIBPATH)
+    CONFIG_FILE = 'config.yml'
 
     def self.version
       VERSION
@@ -22,8 +23,22 @@ unless defined? Rmpd
       args.empty? ? PATH : ::File.join(PATH, *args)
     end
     
+    def self.config_file
+      @config_file ||= load_config
+    end
+    
     def self.config
-      @config ||= Conf.new
+      if not @config
+        @config = Config.new
+        @config.option :plugins, :description => 'What plugins to load?', 
+          :short => 'p', :cast => Array
+      end
+      @config
+    end
+    
+    def self.load_config
+        raise "Config file: #{CONFIG_FILE} not found" if not File.exists?(CONFIG_FILE)
+        YAML.load_file(CONFIG_FILE)
     end
     
     def self.boot
@@ -31,32 +46,32 @@ unless defined? Rmpd
         'rubygems',
         'yaml',
         'callbacks',
-        "#{libpath}/conf.rb",
+        'facets/class/cattr',
+        "#{libpath}/config.rb",
+        "#{libpath}/option.rb",
         "#{libpath}/kernel.rb",
         "#{libpath}/monkeys.rb",
         "#{libpath}/prompt.rb",
         "#{libpath}/player_backend.rb",
         "#{libpath}/player.rb",
-        "#{libpath}/state.rb"
+        "#{libpath}/state.rb",
+        "#{libpath}/server.rb",
       ]
       
       #Load all files
       requires.each { |file_or_gem| require file_or_gem }
-  
-      #Setup the config file
-      config.file = "config.yml"
-
-      if File.exists? config.file
-        config.add_hash YAML.load_file(config.file)
-      end
-  
+    end
+    
+    def self.load_plugins
       config.plugins.each do |plugin|
-        require(PATH + "/lib/plugins/" + plugin)
+        self.config.class.send(:attr_accessor, plugin)
+        self.config.send("#{plugin}=", Config.new)
+        require("#{Rmpd.libpath}/plugins/#{plugin}")
       end
     end
   
-  end  # module Rmpd
-end  # unless defined?
+    end  # module Rmpd
+  end  # unless defined?
 
-Rmpd.boot
-# EOF
+  Rmpd.boot()
+  # EOF

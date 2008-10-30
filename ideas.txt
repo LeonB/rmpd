@@ -1,3 +1,7 @@
+Gem dependencies:
+- GemDependency
+- geminstaller
+
 Gstreamer:
 - new-decoded-pad
 - Decodebin
@@ -34,7 +38,7 @@ Inotify:
 - Rev (based on libev); http://rubyforge.org/projects/rev i.p.v. eventmachine?
 
 Ongeveer hetzelfde:
-- http://djur.desperance.net/ruby/roombox.READMEs
+- http://djur.desperance.net/ruby/roombox.README #look at the irb client
 
 
 Features:
