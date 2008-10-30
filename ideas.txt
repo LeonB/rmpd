@@ -7,6 +7,12 @@ Gstreamer:
 - Decodebin
 - www.unmuted.de/?p=14
 
+Logging:
+- http://rubyforge.org/projects/logsimple/
+- http://rubyforge.org/projects/log4r/
+- http://rubyforge.org/projects/alogr/
+- http://www.ruby-doc.org/stdlib/libdoc/logger/rdoc/
+
 State machine:
 - http://statemachine.rubyforge.org
 

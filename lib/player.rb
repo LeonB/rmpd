@@ -39,7 +39,6 @@ class Player
     #Make sure current_track is set, if it's empty and playlist is not empty
     self.next_track_as_current unless self.playlist.empty? or self.current_track
 
-    p self.current_track
     self.backend.play("file://#{self.current_track.path}") #Current track is set
   end
   
@@ -105,6 +104,8 @@ class Player
   end
   
   def end_of_track_reached
+    Rmpd.log.debug 'End of track reached'
+
     history << playlist.shift
     self.current_track = nil
     

@@ -47,6 +47,7 @@ unless defined? Rmpd
         'yaml',
         'callbacks',
         'facets/class/cattr',
+        "#{libpath}/logger.rb",
         "#{libpath}/config.rb",
         "#{libpath}/option.rb",
         "#{libpath}/kernel.rb",

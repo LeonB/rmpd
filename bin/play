@@ -20,6 +20,6 @@ player.play
 #loop do
 while player.playing? do
   #p player.playlist
-  p "playing #{player.current_track.path}"
+  Rmpd.log.info "playing #{player.current_track.path}"
   sleep 1
 end

@@ -64,6 +64,7 @@ module PlayerBackend::Gst
     playbin.bus.add_watch do |bus, message|
       case message.type
       when Gst::Message::EOS
+        Rmpd.log.debug 'GST: EOS call received'
         self.player.end_of_track_reached()
       when Gst::Message::ERROR
         p message.parse
