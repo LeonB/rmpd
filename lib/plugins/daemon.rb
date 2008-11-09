@@ -3,6 +3,11 @@ module Rmpd
   class Daemon
     require 'daemons'
     cattr_accessor :daemon
+
+    Rmpd.config.daemon.add_option :daemonize, :type => :boolean,
+      :default => false do |commandline|
+      commandline.uses_option('-d', '--daemonize', 'Daemonize process')
+    end
     
     def status_message
       print "#{self.status}\n"

@@ -1,4 +1,6 @@
 #TODO: define an interface
+require 'monitor'
+
 class PlayerBackend
   attr_accessor :player
   attr_reader :state
@@ -22,35 +24,39 @@ class PlayerBackend
     @state = State::PLAYING
     #Don't use join, because the code will wait until the thread has finished
 
-    @thread = Thread.new do #make this optional
+    Rmpd.log.debug "Creating new thread"
+    Thread.new do #make this optional
       Thread.abort_on_exception = true
+      Thread.critical = true
 
       #I don't like this part, but this gets sometimes fired from another thread
       #And then I have to kill that _hard_
       #I've somebody knows how to fix this: PLEASE, PLEASE, PLEASE let me know
       #Maybe with Thread.pass? :P
 
-      #@thread.exit if @thread
-      #@thread = Thread.current
+      #Is this still necessary?
+#      if @thread
+#        Rmpd.log.debug "Joing previous thread"
+#        @thread.join
+#      end
 
-      #Thread.pass
+      Rmpd.log.debug 'Setting current thread as @thread'
+      @thread = Thread.current
 
-      @thread.join if @thread
-
-      @loop = GLib::MainLoop.new(nil, false)
-      begin
+      PlayerBackend.monitor.synchronize do
+        @loop = GLib::MainLoop.new(nil, true)
         super
+        Rmpd.log.debug 'Running mainloop'
         @loop.run
-      ensure
-        self.stop
       end
     end
+
   end
   
   def stop
     @state = State::READY
     super
-    @loop.quit
+    @loop.quit if @loop
   end
   
   def playing?
@@ -64,4 +70,10 @@ class PlayerBackend
   def paused?
     self.state == State::PAUSED
   end
+
+  private
+  def self.monitor
+    @monitor ||= Monitor.new
+  end
+
 end

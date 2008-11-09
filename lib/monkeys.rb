@@ -20,3 +20,28 @@ def constantize(camel_cased_word)
   
   Object.module_eval("::#{$1}", __FILE__, __LINE__)
 end
+
+def only_with_plugins(&block)
+  old_argv = ARGV.dup
+  start_recording = false
+  arguments = []
+
+  ARGV.each do |argument|
+    if not start_recording
+      if argument == '-p' or argument == '--plugins'
+        arguments << argument
+        start_recording = true
+      end
+    else
+      if not argument[0,1] == '-'
+        arguments << argument
+      else
+        break
+      end
+    end
+  end
+
+  ARGV.replace(arguments)
+  block.call
+  ARGV.replace(old_argv)
+end

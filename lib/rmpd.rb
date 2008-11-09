@@ -9,7 +9,7 @@ unless defined? Rmpd
     VERSION = '0.0.1'
     LIBPATH = ::File.expand_path(::File.dirname(__FILE__))
     PATH = ::File.dirname(LIBPATH)
-    CONFIG_FILE = 'config.yml'
+    CONFIG_FILE = '.config/rmpd.yml'
 
     def self.version
       VERSION
@@ -23,22 +23,27 @@ unless defined? Rmpd
       args.empty? ? PATH : ::File.join(PATH, *args)
     end
     
-    def self.config_file
-      @config_file ||= load_config
-    end
-    
     def self.config
       if not @config
-        @config = Config.new
-        @config.option :plugins, :description => 'What plugins to load?', 
-          :short => 'p', :cast => Array
+        @config = RubyConfig.new
+
+        #@config.add_source(UserChoices::YamlConfigFileSource, :from_complete_path,
+        #  "#{Rmpd.path}/#{Rmpd::CONFIG_FILE}")
+        @config.add_source(UserChoices::YamlConfigFileSource, :from_file,
+          Rmpd::CONFIG_FILE)
+        @config.add_source(UserChoices::CommandLineSource, :usage,
+          "Usage: ruby #{$0} [files to play]")
+        
+        @config.add_option :plugins, :type => [:string], :default => [] do |commandline|
+          commandline.uses_option('-p', '--plugins PLUGINS', 'What plugins to load?')
+        end
+
+        only_with_plugins do
+          @config.build
+        end
       end
+
       @config
-    end
-    
-    def self.load_config
-        raise "Config file: #{CONFIG_FILE} not found" if not File.exists?(CONFIG_FILE)
-        YAML.load_file(CONFIG_FILE)
     end
     
     def self.boot
@@ -46,10 +51,9 @@ unless defined? Rmpd
         'rubygems',
         'yaml',
         'callbacks',
+        'ruby-config',
         'facets/class/cattr',
         "#{libpath}/logger.rb",
-        "#{libpath}/config.rb",
-        "#{libpath}/option.rb",
         "#{libpath}/kernel.rb",
         "#{libpath}/monkeys.rb",
         "#{libpath}/prompt.rb",
@@ -65,14 +69,13 @@ unless defined? Rmpd
     
     def self.load_plugins
       config.plugins.each do |plugin|
-        self.config.class.send(:attr_accessor, plugin)
-        self.config.send("#{plugin}=", Config.new)
+        self.config.add_subconfig(plugin)
         require("#{Rmpd.libpath}/plugins/#{plugin}")
       end
     end
-  
-    end  # module Rmpd
-  end  # unless defined?
 
-  Rmpd.boot()
-  # EOF
+  end  # module Rmpd
+end  # unless defined?
+
+Rmpd.boot()
+# EOF

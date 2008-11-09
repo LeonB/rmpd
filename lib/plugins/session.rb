@@ -1,2 +1,7 @@
-#If the player exits, store the current playlist, track, time and history
-#the current player object?
+#If the player exits, store:
+# current playlist
+# playlists?
+# track
+# time
+# history
+# the current player object?

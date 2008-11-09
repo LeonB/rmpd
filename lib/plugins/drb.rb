@@ -6,15 +6,18 @@ module Rmpd
   class Drb
     require 'drb'
     #Rails::Initializer.run do |config|
-    Rmpd.config.drb.options do
-      option :host, :default => 'localhost', :short => 'h'
-      option :port, :default => '7777', :short => 'p' #takes the first letter?
+
+    Rmpd.config.drb.add_option :host, :default => 'localhost' do |commandline|
+      commandline.uses_option('--drb-host HOST', 'Drb host')
+    end
+    Rmpd.config.drb.add_option :port, :default => 7777, :type => :integer do |commandline|
+      commandline.uses_option('--drb-port PORT', 'Drb port')
     end
     
     def self.start_drb_service
       host = Rmpd.config.drb.host
       port = Rmpd.config.drb.port
-
+      
       DRb.start_service("druby://#{host}:#{port}", Rmpd::Server.player)
     end
     

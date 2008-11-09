@@ -39,6 +39,7 @@ class Player
     #Make sure current_track is set, if it's empty and playlist is not empty
     self.next_track_as_current unless self.playlist.empty? or self.current_track
 
+    Rmpd.log.debug "Playing file://#{self.current_track.path}"
     self.backend.play("file://#{self.current_track.path}") #Current track is set
   end
   
@@ -47,7 +48,15 @@ class Player
     #(I wouldn't know when that's not. Just silly security)
     playlist.shift if playlist.first == self.current_track
     self.current_track = nil
+
+    Rmpd.log.debug "Asking backend to stop"
     self.backend.stop
+  end
+
+  def add_array(array)
+    array.each do |input|
+      self.add(input)
+    end
   end
   
   def add(input)
@@ -69,6 +78,11 @@ class Player
   
   def next
     self.remove_current_track
+    
+    if playlist.empty?
+      Rmpd.log.debug 'Playlist is empty'
+    end
+
     if not playlist.empty?
       self.stop #if it isn't stopped, it is still playing and if you then press
         #play: play, play = do nothing

@@ -8,4 +8,5 @@ require File.expand_path(
 #p Rmpd.config.options
 #p Rmpd.config.plugins
 Rmpd.load_plugins
+Rmpd.config.build
 Rmpd::Server.start

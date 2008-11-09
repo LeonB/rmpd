@@ -19,6 +19,10 @@ State machine:
 Parser:
 - http://www.hwaci.com/sw/lemon/
 
+Flags:
+- http://optiflag.rubyforge.org
+- http://trollop.rubyforge.org/
+
 Server (telnet):
 - Gserver: http://ruby-doc.org/stdlib/libdoc/gserver/rdoc/classes/GServer.html
 - http://www.rubyinside.com/advent2006/10-gserver.html

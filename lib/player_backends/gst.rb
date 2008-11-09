@@ -18,6 +18,7 @@ module PlayerBackend::Gst
   def play(uri)
     self.playbin.uri = uri
     self.setup_callbacks
+
     self.playbin.play
   end
   
@@ -34,15 +35,11 @@ module PlayerBackend::Gst
   end
   
   def volume
-    
+    self.playbin.volume
   end
   
-  def volume(level = nil)
-    if level.nil?
-      self.playbin.volume
-    else
-      self.playbin.volume = level
-    end
+  def volume=(level)
+    self.playbin.volume = level
   end
   
   def state=(states)
