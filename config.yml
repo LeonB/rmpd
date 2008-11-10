@@ -1,9 +1,0 @@
-#backend: jruby_gst
-plugins: - drb
-         - daemon
-         - lastfm
-         - watchdirs
-         - xmlrpc
-drb:
-  host: localhost
-  port: 3345
