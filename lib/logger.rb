@@ -17,7 +17,6 @@ module Rmpd
     :default => 'warn') do |commandline|
     commandline.uses_option('-l', '--log-level LEVEL', 'Log level to use')
   end
-  Rmpd.config.build
 
   def self.log
     if not @logger

@@ -6,7 +6,7 @@ module Rmpd
 
     Rmpd.config.daemon.add_option :daemonize, :type => :boolean,
       :default => false do |commandline|
-      commandline.uses_option('-d', '--daemonize', 'Daemonize process')
+      commandline.uses_switch('-d', '--daemonize', 'Daemonize process')
     end
     
     def status_message

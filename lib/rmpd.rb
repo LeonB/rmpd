@@ -55,7 +55,6 @@ unless defined? Rmpd
         'facets/class/cattr',
         "#{libpath}/monkeys.rb",
         "#{libpath}/logger.rb",
-        "#{libpath}/kernel.rb",
         "#{libpath}/prompt.rb",
         "#{libpath}/player_backend.rb",
         "#{libpath}/player.rb",

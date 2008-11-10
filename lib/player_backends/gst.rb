@@ -1,8 +1,6 @@
 #All you have to do (Ubuntu 8.04) is: sudo gem install libgst-ruby
-
+#TODO: implement playbin2
 require 'gst'
-#http://ruby-gnome2.sourceforge.jp
-#http://www.cozmixng.org/retro/projects/ruby-gnome2/browse/ruby-gnome2/trunk/gstreamer
 
 module PlayerBackend::Gst
   
