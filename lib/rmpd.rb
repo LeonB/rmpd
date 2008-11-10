@@ -34,7 +34,7 @@ unless defined? Rmpd
         @config.add_source(UserChoices::CommandLineSource, :usage,
           "Usage: ruby #{$0} [files to play]")
         
-        @config.add_option :plugins, :type => [:string], :default => [] do |commandline|
+        @config.add_option :plugins, :type => [:string] do |commandline|
           commandline.uses_option('-p', '--plugins PLUGINS', 'What plugins to load?')
         end
 
@@ -53,9 +53,9 @@ unless defined? Rmpd
         'callbacks',
         'ruby-config',
         'facets/class/cattr',
+        "#{libpath}/monkeys.rb",
         "#{libpath}/logger.rb",
         "#{libpath}/kernel.rb",
-        "#{libpath}/monkeys.rb",
         "#{libpath}/prompt.rb",
         "#{libpath}/player_backend.rb",
         "#{libpath}/player.rb",

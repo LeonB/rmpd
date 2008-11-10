@@ -13,8 +13,8 @@ player.play
 begin
   while player.playing? do
     #p player.playlist
-    p "playing #{player.current_track.path}"
-    sleep 1
+    #p "playing #{player.current_track.path}"
+    sleep 3
   end
 ensure
   player.stop

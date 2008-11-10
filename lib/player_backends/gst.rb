@@ -69,7 +69,7 @@ module PlayerBackend::Gst
         self.stop
         self.player.end_of_track_reached()
       when Gst::Message::ERROR
-        Rmpd.log.error(message.parse)
+        Rmpd.log.warn(message.parse)
         self.player.stop
       when Gst::Message::STATE_CHANGED
         self.state = playbin.get_state(200 * Gst::MSECOND)

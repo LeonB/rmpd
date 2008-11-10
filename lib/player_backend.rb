@@ -23,6 +23,7 @@ class PlayerBackend
   def play(*args)
     @state = State::PLAYING
     #Don't use join, because the code will wait until the thread has finished
+    Rmpd.log.info "Playing #{args.first}"
 
     Rmpd.log.debug "Creating new thread"
     Thread.new do #make this optional
