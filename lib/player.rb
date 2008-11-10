@@ -61,7 +61,14 @@ class Player
   
   def add(input)
     #TODO: what if it's not a file or directory?
-    
+
+    if input.is_a? Array
+      input.each do |value|
+        add(value)
+      end
+      return
+    end
+
     #I'm using Dir[] because it handles regex'es automatically
     Dir[input].each do |input|
       if File.directory?(input)
@@ -84,7 +91,7 @@ class Player
     end
 
     if not playlist.empty?
-      self.stop #if it isn't stopped, it is still playing and if you then press
+      self.stop if self.playing? #if it isn't stopped, it is still playing and if you then press
         #play: play, play = do nothing
       self.next_track_as_current
       self.play
@@ -122,7 +129,7 @@ class Player
 
     history << playlist.shift
     self.current_track = nil
-    
+
     if not self.playlist.empty?
       keep_playing
     else

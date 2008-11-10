@@ -16,10 +16,10 @@ module PlayerBackend::Gst
   end
   
   def play(uri)
-    self.playbin.uri = uri
-    self.setup_callbacks
+    playbin.uri = uri
+    setup_callbacks
 
-    self.playbin.play
+    playbin.play
   end
   
   def resume
@@ -47,29 +47,38 @@ module PlayerBackend::Gst
     
     case state.nick
     when 'ready', 'void-pending'
-      @state = State::READY
+      new_state = State::READY
     when 'playing'
-      @state = State::PLAYING
+      new_state = State::PLAYING
     when 'paused'
-      @state = State::PAUSED
+      new_state = State::PAUSED
+    end
+
+    if @state != new_state
+      @state = new_state
+      Rmpd.log.debug "Changed state to: #{new_state}"
     end
   end
   
   protected
   def setup_callbacks
-    #self.player.after_end_of_track()
     playbin.bus.add_watch do |bus, message|
       case message.type
       when Gst::Message::EOS
         Rmpd.log.debug 'GST: EOS call received'
+        self.stop
         self.player.end_of_track_reached()
       when Gst::Message::ERROR
-        p message.parse
-        self.player.end_of_track_reached()
+        Rmpd.log.error(message.parse)
+        self.player.stop
       when Gst::Message::STATE_CHANGED
-        self.state = playbin.get_state
+        self.state = playbin.get_state(200 * Gst::MSECOND)
+      when Gst::Message::TAG
+        Rmpd.log.debug "Tag discovered"
       else
-        #p message.type
+        Rmpd.log.debug message.type
+        Rmpd.log.debug message.to_s
+        Rmpd.log.debug message.inspect
       end
       true #If you remove this, the watch doesn't end
     end

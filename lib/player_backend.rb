@@ -35,10 +35,10 @@ class PlayerBackend
       #Maybe with Thread.pass? :P
 
       #Is this still necessary?
-#      if @thread
-#        Rmpd.log.debug "Joing previous thread"
-#        @thread.join
-#      end
+      #if @thread
+      #  Rmpd.log.debug "Joing previous thread"
+      #  @thread.join
+      #end
 
       Rmpd.log.debug 'Setting current thread as @thread'
       @thread = Thread.current
@@ -50,13 +50,12 @@ class PlayerBackend
         @loop.run
       end
     end
-
   end
   
   def stop
-    @state = State::READY
     super
     @loop.quit if @loop
+    @state = State::READY
   end
   
   def playing?
