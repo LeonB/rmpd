@@ -38,7 +38,7 @@ unless defined? Rmpd
           commandline.uses_option('-p', '--plugins PLUGINS', 'What plugins to load?')
         end
 
-        only_with_plugins do
+        only_with_arguments(['plugins', 'logger']) do
           @config.build
         end
       end
@@ -50,8 +50,10 @@ unless defined? Rmpd
       requires = [
         'rubygems',
         'yaml',
-        'callbacks',
-        'ruby-config',
+        #'callbacks',
+        '/home/leon/Workspaces/callbacks/lib/callbacks.rb',
+        #'ruby-config',
+        '/home/leon/Workspaces/ruby-config/lib/ruby-config.rb',
         'facets/class/cattr',
         "#{libpath}/monkeys.rb",
         "#{libpath}/logger.rb",

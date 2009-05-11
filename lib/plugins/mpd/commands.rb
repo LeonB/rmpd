@@ -254,5 +254,7 @@ module Rmpd::Mpd::Commands
   end
 
   def ping
+    'OK'
+  end
 
 end

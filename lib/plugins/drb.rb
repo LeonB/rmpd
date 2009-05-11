@@ -5,7 +5,7 @@
 module Rmpd
   class Drb
     require 'drb'
-    #Rails::Initializer.run do |config|
+    cattr_accessor :service
 
     Rmpd.config.drb.add_option :host, :default => 'localhost' do |commandline|
       commandline.uses_option('--drb-host HOST', 'Drb host')
@@ -15,17 +15,19 @@ module Rmpd
     end
     
     def self.start_drb_service
+      Rmpd.log.info "Running plugin drb"
+
       host = Rmpd.config.drb.host
       port = Rmpd.config.drb.port
       
-      DRb.start_service("druby://#{host}:#{port}", Rmpd::Server.player)
+      Rmpd::Drb.service = DRb.start_service("druby://#{host}:#{port}", Rmpd::Server.player)
     end
     
     def self.stop_drb_service
       DRb.stop_service
     end
     
-    Rmpd::Server.metaclass.after_boot 'Rmpd::Drb.start_drb_service'
+    Rmpd::Server.metaclass.before_boot 'Rmpd::Drb.start_drb_service'
     Rmpd::Server.metaclass.before_exit 'Rmpd::Drb.stop_drb_service' #this is ensured!
   end
 end

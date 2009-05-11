@@ -21,7 +21,7 @@ def constantize(camel_cased_word)
   Object.module_eval("::#{$1}", __FILE__, __LINE__)
 end
 
-def only_with_plugins(&block)
+def only_with_arguments(arguments = [], &block)
   old_argv = ARGV.dup
   start_recording = false
   arguments = []

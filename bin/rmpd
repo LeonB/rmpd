@@ -3,10 +3,11 @@
 require File.expand_path(
   File.join(File.dirname(__FILE__), '..', 'lib', 'rmpd'))
 
-#Start the player
-#Rmpd::Conf.loadparse_commandline_args
-#p Rmpd.config.options
-#p Rmpd.config.plugins
+#Load plugins
 Rmpd.load_plugins
+
+#Buil configuration
 Rmpd.config.build
+
+#Start the player/server
 Rmpd::Server.start

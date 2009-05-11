@@ -4,7 +4,6 @@ module Rmpd
     include Callbacks
     
     def self.boot
-      #self.get_config
       self.player = Player.new
     end
     
@@ -20,6 +19,7 @@ module Rmpd
     end
     
     def self.start
+      Rmpd.log.info 'Starting Rmpd server'
       self.boot
       self.run
     end
